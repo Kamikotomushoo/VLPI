@@ -1,0 +1,68 @@
+<div class="quiz-wrapper">
+  <table class="quiz-table">
+    <tr class="quiz-row quiz-header">
+      <th>Name</th>
+      <th>Time limit</th>
+      <th>Max attempts</th>
+      <th>Pass grade, %</th>
+      <th>Quiz url</th>
+    </tr>
+    <tr class="quiz-row">
+      <td><input [(ngModel)]="quiz && quiz.name" /></td>
+      <td>
+        <div class="time-limit-wrapper">
+          <input
+            type="number"
+            [value]="quiz && quizTime.minutes"
+            (change)="onTimeLimitChange($event, 'minute')"
+            min="0"
+          />
+          <p>:</p>
+          <input
+            type="number"
+            [value]="quiz && quizTime.seconds"
+            (change)="onTimeLimitChange($event, 'second')"
+            min="0"
+          />
+        </div>
+      </td>
+      <td><input type="number" [(ngModel)]="quiz && quiz.maxAttempts" /></td>
+      <td>
+        <input
+          type="number"
+          [(ngModel)]="quiz && quiz.passGrade"
+          (change)="onPassGradeChange()"
+        />
+      </td>
+      <td>
+        <p>{{ quiz && quiz.quizUrl }}</p>
+      </td>
+    </tr>
+  </table>
+  <table class="quiz-table">
+    <tr class="quiz-row quiz-header">
+      <th class="quiz-id">Id</th>
+      <th>Text</th>
+      <th class="quiz-action">Action</th>
+    </tr>
+    <tr class="quiz-row" *ngFor="let question of quiz && quiz.questions">
+      <td class="quiz-id">{{ question && question.id }}</td>
+      <td class="quiz-name" (click)="updateQuestionRedirect(question.id)">
+        {{ question && question.text }}
+      </td>
+      <td class="quiz-action">
+        <button class="btn-delete" (click)="deleteQuestion(question.id)">
+          <img src="assets/rubbish.png" alt="Rubbish" />
+        </button>
+      </td>
+    </tr>
+  </table>
+  <div class="btn-wrapper">
+    <button class="btn-create" (click)="newQuestionRedirect()">
+      Add question
+    </button>
+    <button class="btn-create" (click)="confirm()">
+      Confirm
+    </button>
+  </div>
+</div>

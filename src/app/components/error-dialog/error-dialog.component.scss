@@ -1,0 +1,77 @@
+@import "src/styles/variables.scss";
+::ng-deep .cdk-overlay-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  border-radius: 3px;
+  color: grey;
+
+  min-width: 400px;
+  p {
+    color: white;
+  }
+
+  background-color: rgba(0, 0, 0, 0.068);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+::ng-deep .mat-dialog-container {
+  background: $codGray;
+  min-width: 400px;
+}
+
+.new-event-dialog {
+  font-family: $font-family;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
+  min-width: fit-content;
+  line-height: 2em;
+  padding-right: 0.7em;
+  padding-left: 0.7em;
+
+  h1 {
+    display: flex;
+
+    flex-flow: wrap column;
+  }
+
+  p {
+    margin-top: 1em;
+    display: flex;
+
+    flex-flow: wrap column;
+  }
+
+  .submit-button {
+    font-family: $font-family;
+    font-size: 1em;
+    padding: 0.5em;
+    margin-bottom: 15px;
+    color: rgb(255, 255, 255);
+    border: white 2px solid;
+    background-color: $codGray;
+
+    border-radius: 50px;
+    box-shadow: 0 4px 14px 4px rgba(24, 23, 23, 0.705);
+    min-width: 100px;
+    cursor: pointer;
+  }
+  .submit-button:hover {
+    background-color: $apple;
+  }
+  .submit-button:active {
+    background-color: $fruitSalad;
+  }
+}
+
+@media (max-width: 450px) {
+  body {
+    width: 50%;
+  }
+}

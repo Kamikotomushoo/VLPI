@@ -1,0 +1,21 @@
+@import "styles/variables.scss";
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: $font-family;
+  min-height: 100%;
+  background-image: url(assets/background.jpg);
+  background-repeat: no-repeat;
+  background-position: left top;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: $apple;
+}
