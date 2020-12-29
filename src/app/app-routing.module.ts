@@ -10,6 +10,7 @@ import { QuizComponent } from "./components/home/admin/quiz/quiz.component";
 import { QuestionComponent } from "./components/home/admin/question/question.component";
 import { PassQuizComponent } from "./components/home/interviewee/pass-quiz/pass-quiz.component";
 import { IntervieweeListComponent } from "./components/home/admin/interviewee-list/interviewee-list.component";
+import { TestingComponent } from './testing/testing.component';
 
 const appRoutes: Routes = [
   { path: "", component: WelcomePageComponent },
@@ -22,29 +23,36 @@ const appRoutes: Routes = [
     component: HomeComponent,
     children: [
       {
-        path: "quizlist",
-        component: QuizListComponent,
-      },
-      {
-        path: "intervieweelist",
-        component: IntervieweeListComponent,
-      },
-      {
-        path: "question/:quizId",
-        component: QuestionComponent,
-      },
-      {
-        path: "question",
-        component: QuestionComponent,
-      },
-      {
-        path: "question/:quizId/:id",
-        component: QuestionComponent,
+        path: "testing",
+        component: TestingComponent,
+        children: [
+          {
+            path: "quizlist",
+            component: QuizListComponent,
+          },
+          {
+            path: "intervieweelist",
+            component: IntervieweeListComponent,
+          },
+          {
+            path: "question/:quizId",
+            component: QuestionComponent,
+          },
+          {
+            path: "question",
+            component: QuestionComponent,
+          },
+          {
+            path: "question/:quizId/:id",
+            component: QuestionComponent,
+          },
+
+          { path: "quiz", component: QuizComponent },
+
+          { path: "quiz/:id", component: QuizComponent },
+        ]
       },
 
-      { path: "quiz", component: QuizComponent },
-
-      { path: "quiz/:id", component: QuizComponent },
     ],
   },
 ];

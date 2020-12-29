@@ -19,6 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.authService.autoLogin();
+    this.router.navigate(['/home']);
   }
 
   ngOnDestroy(): void {

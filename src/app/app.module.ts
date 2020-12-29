@@ -35,6 +35,7 @@ import { QuizComponent } from "./components/home/admin/quiz/quiz.component";
 import { PassQuizComponent } from "./components/home/interviewee/pass-quiz/pass-quiz.component";
 import { IntervieweeListComponent } from "../app/components/home/admin/interviewee-list/interviewee-list.component";
 import { UserService } from "./services/user-http.service";
+import { TestingModule } from './testing/testing.module';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { UserService } from "./services/user-http.service";
     MatSelectModule,
     MatButtonModule,
     MatCheckboxModule,
+    TestingModule
   ],
   entryComponents: [ErrorDialogComponent],
   providers: [

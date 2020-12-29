@@ -8,14 +8,27 @@ body {
   margin: 0;
   font-family: $font-family;
   min-height: 100%;
-  background-image: url(assets/background.jpg);
   background-repeat: no-repeat;
   background-position: left top;
   background-attachment: fixed;
   background-size: cover;
+  background-color:  rgba($apple, .1);
 }
 
 button:hover {
   cursor: pointer;
   background-color: $apple;
+}
+
+input, a {
+  outline: none;
+  text-decoration: none;
+  cursor: pointer;
+  &:focus {
+    outline: none;
+  }
+}
+
+a {
+  color: $custom-white
 }

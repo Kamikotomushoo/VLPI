@@ -1,0 +1,22 @@
+<div class="testing-module-wrapper">
+  <nav class="nav-bar">
+    <div class="nav-items">
+      <a routerLink="quizlist" routerLinkActive="active" (click)="status = 'taskList'">
+          Task List
+      </a>
+      <a routerLinkActive="active" routerLink="intervieweelist" (click)="status = 'taskList'">
+          Statistics
+
+      </a>
+    </div>
+
+    <a (click)="goBack()">
+      Go Back
+    </a>
+
+  </nav>
+
+  <div class="outlet">
+      <router-outlet></router-outlet>
+  </div>
+</div>
