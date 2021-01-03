@@ -1,50 +1,35 @@
+<nav class="nav-bar">
+
+  <a class="back-btn" (click)="goBack()">
+    Go Back
+  </a>
+
+</nav>
+
 <div class="quiz-wrapper">
   <div class="quiz-header">
     <p class="quiz-name">{{ quiz && quiz.name }}</p>
-    <p class="timer">{{ getTimeLimit(timeLimit) }}</p>
-    <p class="max-attempts">{{ quiz && quiz.maxAttempts }}</p>
-    <p class="max-grade">{{ quiz && quiz.passGrade }}</p>
+    <p class="timer">Time left: {{ getTimeLimit(timeLimit) }}</p>
+    <p class="max-attempts">|</p>
+    <p class="max-attempts">Num. of attempts: {{ (passedQuiz && passedQuiz.attempt) }}/{{ (quiz && quiz.maxAttempts) }}</p>
   </div>
-  <div class="user-info-wrapper">
-    <input
-      class="info-input"
-      placeholder="Name"
-      [(ngModel)]="passedQuiz && passedQuiz.user.name"
-    />
-    <input
-      class="info-input"
-      placeholder="Surname"
-      [(ngModel)]="passedQuiz && passedQuiz.user.surname"
-    />
-    <input
-      class="info-input"
-      placeholder="Email"
-      [(ngModel)]="passedQuiz && passedQuiz.user.email"
-    />
-  </div>
-  <div class="questions-wrapper">
-    <div
-      class="question-item-wrapper"
-      *ngFor="let question of quiz && quiz.questions"
-    >
-      <p class="question-label">{{ question.text }}</p>
-      <div class="answer-wrapper" *ngFor="let answer of question.answers">
-        <input
-          *ngIf="checkAnswers(question.id)"
-          type="checkbox"
-          class="answer-input"
-          [(ngModel)]="answer && answer.isChecked"
-        />
-        <input
-          *ngIf="!checkAnswers(question.id)"
-          type="radio"
-          class="answer-input"
-          [name]="question.id"
-          (change)="changeAnswers($event, answer)"
-        />
-        <p class="answer-label">{{ answer.text }}</p>
-      </div>
+
+  <div class="question-wrapper">
+    <div class="task-code-block" style="margin-right: 10px; cursor: default;">
+      <h4>Code for testing</h4>
+      <textarea [ngModel]="quiz.code" readonly style="cursor: default;" disabled></textarea>
+    </div>
+
+    <div class="correct-answer-block">
+        <h4>Enter testing code</h4>
+        <textarea [(ngModel)]="passedQuiz.answer" [disabled]="passedQuiz.isCorrect || (passedQuiz.attempt === quiz.maxAttempts)"
+          [class.failed]="!passedQuiz.isCorrect && (passedQuiz.attempt === quiz.maxAttempts)"></textarea>
     </div>
   </div>
-  <button class="btn-create" (click)="confirm()">Confirm</button>
+
+  <div class="btn-wrapper">
+    <button class="btn-create" (click)="confirm()" [disabled]="passedQuiz.isCorrect || (passedQuiz.attempt === quiz.maxAttempts)">
+      Confirm
+    </button>
+  </div>
 </div>

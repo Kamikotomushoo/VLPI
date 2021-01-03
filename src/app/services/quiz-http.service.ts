@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { catchError } from "rxjs/operators";
 import { environment } from "src/environments/environment";
-import { throwError } from "rxjs";
+import { throwError, BehaviorSubject } from "rxjs";
 import { GlobalErrors } from "../classes/error";
 import { IQuizData, IQuizViewData } from "../interfaces/quiz-data";
 
@@ -10,42 +10,72 @@ import { IQuizData, IQuizViewData } from "../interfaces/quiz-data";
 export class QuizService {
   apiUrl: string = environment.apiUrl + "/Quiz";
 
+  currentQuizzes$ = new BehaviorSubject([]);
+
   constructor(private http: HttpClient) {}
 
-  getQuizList() {
-    return this.http
-      .get<Array<IQuizData>>(this.apiUrl + "/GetAll")
-      .pipe(catchError(this.errorHandling));
+  getQuizList(topicName: string): IQuizData[]  {
+
+    const quizzes = JSON.parse(localStorage.getItem('quizzes'));
+    return (quizzes && quizzes[topicName]) || [];
   }
 
-  getQuiz(id: number) {
-    return this.http
-      .get<IQuizData>(this.apiUrl + "/GetQuizById/" + id)
-      .pipe(catchError(this.errorHandling));
+  getQuiz(topicName: string, id: string): IQuizData {
+    const quizzes: any = JSON.parse(localStorage.getItem('quizzes')) || {};
+
+    const topicsQuizzes = (quizzes && quizzes[topicName]) || [];
+
+    return topicsQuizzes.find(quiz => quiz.id === id);
+
   }
 
-  getQuizView(id: number) {
-    return this.http
-      .get<IQuizViewData>(this.apiUrl + "/GetQuizViewById/" + id)
-      .pipe(catchError(this.errorHandling));
+  setNewQuiz(quiz: IQuizData, topicName: string) {
+    const quizzes: any = JSON.parse(localStorage.getItem('quizzes')) || {};
+
+    const topicsQuizzes = (quizzes && quizzes[topicName]) || [];
+
+    const newId = topicsQuizzes.length ? `${+topicsQuizzes[topicsQuizzes.length - 1].id + 1}` : '1';
+    quiz.id = newId;
+
+    topicsQuizzes.push(quiz);
+
+    quizzes[topicName] = topicsQuizzes;
+
+    localStorage.setItem('quizzes', JSON.stringify(quizzes));
+
+    return quiz;
+
   }
 
-  setNewQuiz(quiz: IQuizData) {
-    return this.http
-      .post<IQuizData>(this.apiUrl + "/PostQuiz", quiz)
-      .pipe(catchError(this.errorHandling));
+  updateQuiz(quiz: IQuizData, topicName: string) {
+
+    const quizzes: any = JSON.parse(localStorage.getItem('quizzes')) || {};
+    const topicsQuizzes = (quizzes && quizzes[topicName]) || [];
+
+    const existedQuizIndex = topicsQuizzes.findIndex(quizItem => quizItem.id === quiz.id);
+    topicsQuizzes[existedQuizIndex] = quiz;
+
+    quizzes[topicName] = topicsQuizzes;
+    localStorage.setItem('quizzes', JSON.stringify(quizzes));
+
+    return quiz;
+
   }
 
-  updateQuiz(quiz: IQuizData) {
-    return this.http
-      .put<IQuizData>(this.apiUrl + "/PutQuiz", quiz)
-      .pipe(catchError(this.errorHandling));
-  }
+  deleteQuiz(id: string, topicName) {
+    const topicsQuizzes = this.getQuizList(topicName);
 
-  deleteQuiz(id: number) {
-    return this.http
-      .delete(this.apiUrl + "/DeleteQuiz/" + id)
-      .pipe(catchError(this.errorHandling));
+    const index = topicsQuizzes.findIndex(quiz => quiz.id === id);
+
+    topicsQuizzes.splice(index, 1);
+
+    const quizzes = JSON.parse(localStorage.getItem('quizzes'));
+
+    quizzes[topicName] = topicsQuizzes;
+
+    localStorage.setItem('quizzes', JSON.stringify(quizzes));
+
+    return topicsQuizzes;
   }
 
   private errorHandling(errorResponse: HttpErrorResponse) {

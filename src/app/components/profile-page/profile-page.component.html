@@ -1,0 +1,26 @@
+<div class="profile-page-wrapper">
+  <h1>
+    Hi, {{name}}!
+  </h1>
+  <span>Here, you can see you info and try to edit it!)</span>
+
+  <div class="input-block">
+    <label for="name">Your name</label>
+    <input type="text" name="name" id="" [ngModel]="name">
+  </div>
+
+  <div class="input-block">
+    <label for="surname">Your surname</label>
+    <input type="text" name="surname" id="" [ngModel]="surname">
+  </div>
+
+  <div class="input-block">
+    <label for="userEmail">Your email</label>
+    <input type="text" name="userEmail" id="" [ngModel]="userEmail">
+  </div>
+
+  <div class="action-buttons">
+    <a (click)="goBack()">Go back</a>
+    <a (click)="logout()">Logout</a>
+  </div>
+</div>

@@ -4,10 +4,9 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class RouterHelperService {
+export class LoaderHelperService {
 
-  selectedModule = new BehaviorSubject('');
-  selectedTopic = new BehaviorSubject('');
+  isLoad = new BehaviorSubject(false);
 
   constructor() { }
 }

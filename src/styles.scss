@@ -15,9 +15,14 @@ body {
   background-color:  rgba($apple, .1);
 }
 
-button:hover {
-  cursor: pointer;
-  background-color: $apple;
+button {
+  transition: all linear .3s;
+
+  &:hover:not(:disabled) {
+    cursor: pointer;
+    color: $custom-white;
+    background-color: $apple;
+  }
 }
 
 input, a {
@@ -32,3 +37,4 @@ input, a {
 a {
   color: $custom-white
 }
+

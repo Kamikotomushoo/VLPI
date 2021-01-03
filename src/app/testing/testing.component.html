@@ -1,22 +1,59 @@
 <div class="testing-module-wrapper">
   <nav class="nav-bar">
     <div class="nav-items">
-      <a routerLink="quizlist" routerLinkActive="active" (click)="status = 'taskList'">
-          Task List
-      </a>
-      <a routerLinkActive="active" routerLink="intervieweelist" (click)="status = 'taskList'">
-          Statistics
-
-      </a>
+      <a *ngIf="topicSelected" (click)="status = 'taskList'" [class.active]="status === 'taskList'">Task list</a>
+      <a *ngIf="!topicSelected && userService.user.getValue().userRole === 2" (click)="openStat()" [class.active]="status === 'statistics'">Statistics</a>
     </div>
 
-    <a (click)="goBack()">
+    <a *ngIf="status !== 'statistics'" class="back-btn" (click)="goBack()">
+      Go Back
+    </a>
+
+    <a *ngIf="status === 'statistics'" class="back-btn" (click)="closeStatistics()">
       Go Back
     </a>
 
   </nav>
 
-  <div class="outlet">
-      <router-outlet></router-outlet>
-  </div>
+  <ng-container *ngIf="userService.user.getValue().userRole === 1">
+    <ng-container *ngIf="!topicSelected">
+      <div class="modules-list">
+        <div class="module-item" *ngFor="let topic of topicsList" (click)="selectTopic(topic.name)">
+          <h4>{{topic.title}}</h4>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="topicSelected">
+      <app-quiz-list *ngIf="status === 'taskList'" [topic]="topicSelected"></app-quiz-list>
+    </ng-container>
+  </ng-container>
+
+
+  <ng-container *ngIf="userService.user.getValue().userRole === 2">
+
+    <ng-container *ngIf="status !== 'statistics'">
+      <ng-container *ngIf="!topicSelected">
+        <div class="modules-list">
+          <div class="module-item" *ngFor="let topic of topicsList" (click)="selectTopic(topic.name)">
+            <h4>{{topic.title}}</h4>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="topicSelected">
+        <app-quiz-list *ngIf="status === 'taskList'" [topic]="topicSelected"></app-quiz-list>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="status === 'statistics'">
+      <div class="outlet">
+        <router-outlet></router-outlet>
+      </div>
+    </ng-container>
+
+  </ng-container>
+
+
+
 </div>

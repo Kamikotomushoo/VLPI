@@ -17,6 +17,7 @@ import { User } from "../classes/user";
 
 @Injectable()
 export class AuthService {
+
   user = new BehaviorSubject<User>(null);
   private tokenExpirationTimer: any;
   constructor(
@@ -81,7 +82,8 @@ export class AuthService {
     this.user.next(null);
     this.http.get(environment.apiUrl + "/Account/Logout");
     this.router.navigate(["/login"]);
-    localStorage.clear();
+    localStorage.removeItem('token');
+    localStorage.removeItem('userData');
 
     this.tokenExpirationTimer = null;
   }

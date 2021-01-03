@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { AuthService } from "src/app/services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
-import { ErrorDialogComponent } from "../error-dialog/error-dialog.component";
+import { ErrorDialogComponent } from "../../core/components/error-dialog/error-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { AuthErrors } from "src/app/classes/error";
 import { RouterHelperService } from 'src/app/core/services/router-helper.service';
@@ -37,9 +37,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+
     this.selectedModuleSub$ = this.routerHalper.selectedModule.subscribe(moduleRoute => {
+      console.log(moduleRoute);
       this.selectedModule = moduleRoute;
-    })
+    });
   }
 
 
@@ -61,6 +63,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.routerHalper.selectedModule.next(route);
       this.router.navigate([route], { relativeTo: this.route });
     }
+  }
+
+  goBack() {
+    window.history.back();
   }
 
   ngOnDestroy() {

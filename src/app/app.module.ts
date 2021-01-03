@@ -28,14 +28,13 @@ import { WelcomePageComponent } from "./components/welcome-page/welcome-page.com
 import { ScrollingModule } from "@angular/cdk/scrolling";
 import { HomeComponent } from "./components/home/home.component";
 import { HttpAuthInterceptor } from "src/app/classes/http-auth-interceptor";
-import { QuizListComponent } from "./components/home/admin/quiz-list/quiz-list.component";
-import { ErrorDialogComponent } from "./components/error-dialog/error-dialog.component";
 import { QuestionComponent } from "./components/home/admin/question/question.component";
 import { QuizComponent } from "./components/home/admin/quiz/quiz.component";
 import { PassQuizComponent } from "./components/home/interviewee/pass-quiz/pass-quiz.component";
-import { IntervieweeListComponent } from "../app/components/home/admin/interviewee-list/interviewee-list.component";
 import { UserService } from "./services/user-http.service";
 import { TestingModule } from './testing/testing.module';
+import { CoreModule } from './core/core.module';
+import { ProfilePageComponent } from './components/profile-page/profile-page.component';
 
 @NgModule({
   declarations: [
@@ -46,12 +45,10 @@ import { TestingModule } from './testing/testing.module';
     RegistrationFormComponent,
     WelcomePageComponent,
     HomeComponent,
-    ErrorDialogComponent,
     QuestionComponent,
-    QuizListComponent,
     QuizComponent,
     PassQuizComponent,
-    IntervieweeListComponent,
+    ProfilePageComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,9 +67,9 @@ import { TestingModule } from './testing/testing.module';
     MatSelectModule,
     MatButtonModule,
     MatCheckboxModule,
-    TestingModule
+    TestingModule,
+    CoreModule
   ],
-  entryComponents: [ErrorDialogComponent],
   providers: [
     AuthService,
     UserService,

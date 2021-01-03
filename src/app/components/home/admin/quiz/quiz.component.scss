@@ -1,5 +1,35 @@
 @import "src/styles/variables.scss";
 
+.nav-bar {
+  background-color: #191919de;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  min-height: 30px;
+
+  a {
+   padding: 7px 15px;
+  }
+
+  .back-btn {
+    display: flex;
+    right: 0px;
+    position: absolute;
+
+  }
+
+  .nav-items {
+    a {
+      &.active, &:hover {
+        background-color: rgba($apple, .3);
+      }
+
+    }
+  }
+}
+
 .quiz-wrapper {
   display: flex;
   justify-content: center;
@@ -13,6 +43,26 @@
     width: 120px;
     height: 42px;
     border-radius: 5px;
+  }
+
+  .question-wrapper {
+    display: flex;
+    width: 100%;
+    .task-code-block, .correct-answer-block {
+      width: 50%;
+    }
+
+    textarea {
+      width: calc(100% - 20px);
+      max-width: calc(100% - 20px);
+      height: 200px;
+      max-height: 200px;
+      overflow: auto;
+      padding: 5px;
+      border-radius: 4px;
+      resize: none;
+    }
+
   }
 }
 
@@ -89,9 +139,10 @@
   max-width: 100px;
 
   input {
-    width: 100%;
+    width: 40px !important;
     min-width: unset;
     border: 1px solid black !important;
+    border-radius: 4px;
     text-align: center;
   }
 

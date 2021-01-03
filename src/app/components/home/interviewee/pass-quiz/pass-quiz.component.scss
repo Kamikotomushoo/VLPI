@@ -1,5 +1,36 @@
 @import "src/styles/variables.scss";
 
+
+.nav-bar {
+  background-color: #191919de;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  min-height: 30px;
+
+  a {
+   padding: 7px 15px;
+  }
+
+  .back-btn {
+    display: flex;
+    right: 0px;
+    position: absolute;
+
+  }
+
+  .nav-items {
+    a {
+      &.active, &:hover {
+        background-color: rgba($apple, .3);
+      }
+
+    }
+  }
+}
+
 ::-webkit-input-placeholder {
   /* Edge */
   color: rgb(255, 255, 255);
@@ -19,6 +50,14 @@
   padding: 30px;
   font-size: 16px;
 
+  .btn-create {
+    border: none;
+    margin-top: 15px;
+    width: 120px;
+    height: 42px;
+    border-radius: 5px;
+  }
+
   p {
     margin: 0;
   }
@@ -37,6 +76,7 @@
 
     .timer {
       margin-left: auto;
+      margin-right: 15px;
       font-weight: bold;
       color: $prairieSand;
     }
@@ -92,4 +132,45 @@
       }
     }
   }
+}
+
+.btn-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  .btn-create {
+    margin-right: 100px;
+    border: 0.5px solid black;
+  }
+}
+
+.question-wrapper {
+  display: flex;
+  width: 100%;
+  .task-code-block, .correct-answer-block {
+    width: 50%;
+  }
+
+  .correct-answer-block {
+    textarea:disabled {
+      background-color: rgba($apple, .3);
+    }
+
+    textarea.failed {
+      background-color: rgba($red, .3);
+    }
+  }
+
+  textarea {
+    width: calc(100% - 20px);
+    max-width: calc(100% - 20px);
+    height: 200px;
+    max-height: 200px;
+    overflow: auto;
+    padding: 5px;
+    border-radius: 4px;
+    resize: none;
+  }
+
 }

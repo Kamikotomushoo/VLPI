@@ -4,4 +4,3 @@ export class User {
     public userRole: number,
     ){}
   }
-  

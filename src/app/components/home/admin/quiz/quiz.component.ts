@@ -1,6 +1,6 @@
-import { Component, OnInit, Type } from "@angular/core";
+import { Component, OnInit, Type, OnDestroy } from "@angular/core";
 import { IQuizData } from "src/app/interfaces/quiz-data";
-import { ErrorDialogComponent } from "../../../error-dialog/error-dialog.component";
+import { ErrorDialogComponent } from "../../../../core/components/error-dialog/error-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { QuizService } from "src/app/services/quiz-http.service";
 import { GlobalErrors } from "src/app/classes/error";
@@ -8,6 +8,9 @@ import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { ITimeLimit, ICustomTimeLimit } from "src/app/interfaces/time-limit";
 import { QuestionService } from "src/app/services/question-http.service";
 import { IQuestionData } from "src/app/interfaces/question-data";
+import { RouterHelperService } from 'src/app/core/services/router-helper.service';
+import { Subscription } from 'rxjs';
+import { LoaderHelperService } from 'src/app/core/services/loader-helper.service';
 
 type TimePart = "minute" | "second";
 
@@ -16,152 +19,92 @@ type TimePart = "minute" | "second";
   templateUrl: "./quiz.component.html",
   styleUrls: ["./quiz.component.scss"],
 })
-export class QuizComponent implements OnInit {
-  id: number;
+export class QuizComponent implements OnInit, OnDestroy {
+
+  id: string;
   quiz: IQuizData;
   quizTime: ICustomTimeLimit = { minutes: 0, seconds: 0 };
+  topicName: string;
+
+  selectedTopicSub$: Subscription;
 
   constructor(
     private dialog: MatDialog,
     private quizService: QuizService,
     private questionService: QuestionService,
     private activateRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private routerHelper: RouterHelperService,
+    private loader: LoaderHelperService
   ) {}
 
   ngOnInit(): void {
-    this.activateRoute.params.subscribe((params) => {
-      this.id = params["id"];
-      if (this.id !== undefined) {
-        this.getById(this.id);
+    this.id = this.activateRoute.snapshot.paramMap.get('id');
+
+    this.selectedTopicSub$ = this.routerHelper.selectedTopic.subscribe(topicName => {
+      this.topicName = topicName;
+      if (this.id) {
+        this.getById(this.topicName, this.id);
       } else {
-        this.quiz = {
-          name: "",
+        this.createNewQuiz();
+      }
+
+    });
+
+  }
+
+  getById(topicName: string, id: string) {
+    this.quiz = this.quizService.getQuiz(topicName, id);
+    console.log('quiz', this.quiz);
+    this.setTimelimit();
+  }
+
+  createNewQuiz() {
+    this.quiz = {
+          name: '',
           timeLimit: 0,
           maxAttempts: 0,
-          passGrade: 0,
-          quizUrl: "",
-          questions: Array<IQuestionData>(),
+          quizUrl: '',
+          code: '',
+          correctTest: ''
         };
-        if (JSON.parse(localStorage.getItem("quiz")) !== null) {
-          this.quiz = this.quiz.questions = JSON.parse(
-            localStorage.getItem("quiz")
-          );
-        }
-        if (JSON.parse(localStorage.getItem("questionList")) !== null) {
-          this.quiz.questions = JSON.parse(
-            localStorage.getItem("questionList")
-          );
-          localStorage.setItem("quiz", JSON.stringify(this.quiz));
-        }
-      }
-    });
+
   }
 
-  getById(id: number) {
-    this.quizService.getQuiz(id).subscribe(
-      (responseData) => {
-        this.quiz = responseData;
-        this.quizTime.minutes = Math.floor(this.quiz.timeLimit / 60);
-        this.quizTime.seconds = this.quiz.timeLimit % 60;
-        localStorage.setItem("quiz", JSON.stringify(this.quiz));
-        localStorage.setItem(
-          "questionList",
-          JSON.stringify(this.quiz.questions)
-        );
-      },
-      (errorData) => {
-        if (errorData.name === "HttpErrorResponse") {
-          this.openErrorResponseDialog(errorData.message);
-        }
-      }
-    );
+  setTimelimit() {
+    this.quizTime.minutes = Math.floor((this.quiz.timeLimit / 60) || 0);
+    this.quizTime.seconds = Math.floor((this.quiz.timeLimit % 60) || 0);
   }
 
-  updateTimeType = (part: number) =>
-    part.toString().length > 1 ? part : `0${part}`;
+  updateTimeType = (part: number) => part.toString().length > 1 ? part : `0${part}`
 
   getTimeLimit = (timeLimit: ITimeLimit) =>
-    `${this.updateTimeType(timeLimit?.minutes)}:${this.updateTimeType(
-      timeLimit?.seconds
-    )}`;
+    `${this.updateTimeType(timeLimit.minutes || 0)}:${this.updateTimeType(
+      timeLimit.seconds || 0)}`
 
   update(quiz: IQuizData) {
-    if (quiz.id != undefined) {
-      this,
-        this.quizService.updateQuiz(quiz).subscribe(
-          (responseData) => {
-            this.router.navigate(["/home/quizlist"]);
-          },
-          (errorData) => {
-            if (errorData.name === GlobalErrors.undefinedError) {
-              this.openErrorResponseDialog(errorData.message);
-            }
-          }
-        );
-    }
+
+    this.quiz = this.quizService.updateQuiz(quiz, this.topicName);
+
   }
 
-  createQuiz(quiz: IQuizData) {
-    quiz.questions.forEach((element) => {});
-    this.quizService.setNewQuiz(quiz).subscribe(
-      (responseData) => {
-        this.router.navigate(["/home/quizlist"]);
-      },
-      (errorData) => {
-        if (errorData.name === "HttpErrorResponse") {
-          this.openErrorResponseDialog(errorData.message);
-        }
-      }
-    );
+  createQuiz() {
+    this.quiz = this.quizService.setNewQuiz(this.quiz, this.topicName);
+    console.log('quiz', this.quiz);
   }
 
   confirm() {
-    if (this.id !== undefined) {
-      this.update(this.quiz);
-    } else {
-      this.createQuiz(this.quiz);
-    }
-    localStorage.removeItem("questionList");
-    localStorage.removeItem("quiz");
+    this.loader.isLoad.next(true);
+    setTimeout(() => {
+      if (this.id) {
+        this.update(this.quiz);
+      } else {
+        this.createQuiz();
+      }
+      this.loader.isLoad.next(false);
+    }, 1500);
   }
 
-  updateQuestionRedirect(id: number) {
-    if (this.quiz.id !== undefined) {
-      this.router.navigate([
-        "/home/question/" + this.quiz.id.toString() + "/" + id.toString(),
-      ]);
-    } else {
-      this.router.navigate(["/home/question"]);
-    }
-  }
-
-  newQuestionRedirect() {
-    localStorage.setItem("quiz", JSON.stringify(this.quiz));
-    localStorage.setItem("questionList", JSON.stringify(this.quiz.questions));
-    if (this.quiz.id !== undefined) {
-      this.router.navigate(["/home/question/" + this.quiz.id.toString()]);
-    } else {
-      this.router.navigate(["/home/question"]);
-    }
-  }
-
-  deleteQuestion(id: number) {
-    if (id !== undefined) {
-      this.questionService.deleteQuestion(id).subscribe(
-        (_responseData) => {
-          this.quiz.questions = this.quiz.questions.filter(
-            (item) => item.id !== id
-          );
-        },
-        (errorData) => {
-          if (errorData.name === GlobalErrors.undefinedError) {
-            this.openErrorResponseDialog(errorData.message);
-          }
-        }
-      );
-    }
-  }
 
   onTimeLimitChange(event: any, type: TimePart) {
     const value = Number(event.target.value);
@@ -189,11 +132,11 @@ export class QuizComponent implements OnInit {
   }
 
   onPassGradeChange() {
-    if (this.quiz.passGrade > 100) {
-      this.quiz.passGrade = 100;
-    } else if (this.quiz.passGrade < 0) {
-      this.quiz.passGrade = 0;
-    }
+    // if (this.quiz.passGrade > 100) {
+    //   this.quiz.passGrade = 100;
+    // } else if (this.quiz.passGrade < 0) {
+    //   this.quiz.passGrade = 0;
+    // }
   }
 
   private openErrorResponseDialog(errorName: string) {
@@ -205,5 +148,13 @@ export class QuizComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       console.log("The dialog was closed");
     });
+  }
+
+  goBack() {
+    window.history.back();
+  }
+
+  ngOnDestroy() {
+    this.selectedTopicSub$.unsubscribe();
   }
 }

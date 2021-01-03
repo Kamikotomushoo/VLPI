@@ -8,13 +8,57 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
+    min-height: 30px;
 
     a {
      padding: 7px 15px;
     }
 
-    & > a {
-      align-self: flex-end;
+    .back-btn {
+      display: flex;
+      right: 0px;
+      position: absolute;
+
     }
+
+    .nav-items {
+      a {
+        &.active, &:hover {
+          background-color: rgba($apple, .3);
+        }
+
+      }
+    }
+  }
+
+  .modules-list {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 100px;
+    .module-item {
+      width: 250px;
+      height: 150px;
+      margin: 10px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 1px solid rgba($black, .5);
+      border-radius: 4px;
+      background-color: rgba($black, .1);
+      transition: all linear .3s;
+      &:hover {
+        background-color: rgba($black, .3);
+      }
+
+      h4 {
+        text-align: center;
+      }
+    }
+
   }
 }

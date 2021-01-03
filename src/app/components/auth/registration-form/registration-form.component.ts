@@ -6,7 +6,8 @@ import { SignInUpValidator } from "src/app/validators/sign-in-up.validator";
 import { Router } from "@angular/router";
 import { AuthErrors } from "src/app/classes/error";
 import { MatDialog } from "@angular/material/dialog";
-import { ErrorDialogComponent } from "../../error-dialog/error-dialog.component";
+import { ErrorDialogComponent } from "../../../core/components/error-dialog/error-dialog.component";
+import { LoaderHelperService } from 'src/app/core/services/loader-helper.service';
 
 @Component({
   selector: "app-registration-form",
@@ -29,7 +30,8 @@ export class RegistrationFormComponent implements OnInit {
     private authService: AuthService,
     private singInUpValidator: SignInUpValidator,
     public dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private loader: LoaderHelperService
   ) {}
 
   ngOnInit() {
@@ -63,6 +65,8 @@ export class RegistrationFormComponent implements OnInit {
     if (this.registrationForm.invalid) {
       return;
     }
+    this.loader.isLoad.next(true);
+
     const inputData: IUserData = {
       name: this.registrationForm.get("userName").value,
       surname: this.registrationForm.get("userSurname").value,
@@ -77,11 +81,13 @@ export class RegistrationFormComponent implements OnInit {
         this.registrationForm.reset();
         return this.authService.getUserInfo().subscribe(
           (responseData) => {
+            this.loader.isLoad.next(false);
             console.log("getInfo-end");
             this.router.navigate(["/home"]);
           },
           (errorData) => {
             console.log(errorData);
+            this.loader.isLoad.next(false);
             this.authError = errorData;
             if (errorData.name === AuthErrors.undefinedError) {
               this.openErrorResponseDialog(errorData.message);
@@ -91,6 +97,7 @@ export class RegistrationFormComponent implements OnInit {
       },
       (errorData) => {
         console.log(errorData);
+        this.loader.isLoad.next(false);
         this.authError = errorData;
         if (errorData === AuthErrors.undefinedError) {
           this.openErrorResponseDialog(errorData.message);

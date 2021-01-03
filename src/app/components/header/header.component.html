@@ -4,7 +4,7 @@
   </p>
 
   <div class="account-menu-nav">
-    <p class="name">Hi, {{ name }}</p>
+    <p class="name" (click)="goToProfilePage()" style="cursor: pointer;">Hi, {{ name }}</p>
     <input type="button" value="Logout" (click)="onLogout()">
   </div>
 </header>

@@ -3,36 +3,38 @@ import { IUserData } from "./user-data";
 import { IPassedQuizAnswer } from "./answer-data";
 
 export interface IQuizData {
-  id?: number;
+  id?: string;
   name?: string;
   timeLimit?: any;
   maxAttempts?: number;
-  passGrade?: number;
   quizUrl?: string;
-  questions?: Array<IQuestionData>;
+  code?: any;
+  correctTest?: any;
 }
 
 export interface IQuizViewData {
-  id?: number;
+  id?: string;
   name?: string;
   timeLimit?: number;
   maxAttempts?: number;
-  passGrade?: number;
   quizUrl?: string;
-  questions?: Array<IQuestionViewData>;
+  code?: any;
+  correctTest?: any;
 }
 
 export interface IPassedQuizData {
-  id?: number;
-  quizId?: number;
-  user?: IUserData;
-  answers?: Array<IPassedQuizAnswer>;
+  id?: string;
+  quizId?: string;
+  userEmail?: string;
+  answer?: string;
+  isCorrect?: boolean;
+  attempt?: number;
 }
 
 export interface IPassedFullQuizData {
-  id?: number;
+  id?: string;
   grade?: number;
-  quizId?: number;
+  quizId?: string;
   user?: IUserData;
   answers?: Array<IPassedQuizAnswer>;
 }

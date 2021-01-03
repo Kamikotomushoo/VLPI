@@ -1,2 +1,4 @@
-
+<div class="loading-div" *ngIf="loader.isLoad.getValue()">
+  <app-loading-spinner></app-loading-spinner>
+</div>
 <router-outlet></router-outlet>

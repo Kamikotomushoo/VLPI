@@ -5,7 +5,8 @@ import { IUserData } from "../../../interfaces/user-data";
 import { AuthService } from "src/app/services/auth.service";
 import { Router } from "@angular/router";
 import { AuthErrors } from "src/app/classes/error";
-import { ErrorDialogComponent } from "../../error-dialog/error-dialog.component";
+import { ErrorDialogComponent } from "../../../core/components/error-dialog/error-dialog.component";
+import { LoaderHelperService } from 'src/app/core/services/loader-helper.service';
 
 @Component({
   selector: "app-login-form",
@@ -20,7 +21,8 @@ export class LoginFormComponent implements OnInit {
   constructor(
     private authService: AuthService,
     public dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private loader: LoaderHelperService
   ) {}
 
   ngOnInit() {
@@ -41,14 +43,17 @@ export class LoginFormComponent implements OnInit {
     };
 
     console.log("start login in");
+    this.loader.isLoad.next(true);
     this.authService.singIn(loginData).subscribe(
       (responseData) => {
         this.loginForm.reset();
         return this.authService.getUserInfo().subscribe(
           (responseData) => {
+            this.loader.isLoad.next(false);
             this.router.navigate(["/home"]);
           },
           (errorData) => {
+            this.loader.isLoad.next(false);
             console.log(errorData);
             this.authError = errorData;
             if (errorData.name === AuthErrors.undefinedError) {
@@ -59,6 +64,7 @@ export class LoginFormComponent implements OnInit {
       },
       (errorData) => {
         console.log(errorData);
+        this.loader.isLoad.next(false);
         this.authError = errorData;
         if (errorData.name === AuthErrors.undefinedError) {
           this.openErrorResponseDialog(errorData.message);

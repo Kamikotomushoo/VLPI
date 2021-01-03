@@ -1,11 +1,18 @@
+<nav class="nav-bar">
+
+  <a class="back-btn" (click)="goBack()">
+    Go Back
+  </a>
+
+</nav>
+
 <div class="quiz-wrapper">
   <table class="quiz-table">
     <tr class="quiz-row quiz-header">
       <th>Name</th>
       <th>Time limit</th>
       <th>Max attempts</th>
-      <th>Pass grade, %</th>
-      <th>Quiz url</th>
+      <th>Task url</th>
     </tr>
     <tr class="quiz-row">
       <td><input [(ngModel)]="quiz && quiz.name" /></td>
@@ -27,40 +34,25 @@
         </div>
       </td>
       <td><input type="number" [(ngModel)]="quiz && quiz.maxAttempts" /></td>
-      <td>
-        <input
-          type="number"
-          [(ngModel)]="quiz && quiz.passGrade"
-          (change)="onPassGradeChange()"
-        />
-      </td>
+
       <td>
         <p>{{ quiz && quiz.quizUrl }}</p>
       </td>
     </tr>
   </table>
-  <table class="quiz-table">
-    <tr class="quiz-row quiz-header">
-      <th class="quiz-id">Id</th>
-      <th>Text</th>
-      <th class="quiz-action">Action</th>
-    </tr>
-    <tr class="quiz-row" *ngFor="let question of quiz && quiz.questions">
-      <td class="quiz-id">{{ question && question.id }}</td>
-      <td class="quiz-name" (click)="updateQuestionRedirect(question.id)">
-        {{ question && question.text }}
-      </td>
-      <td class="quiz-action">
-        <button class="btn-delete" (click)="deleteQuestion(question.id)">
-          <img src="assets/rubbish.png" alt="Rubbish" />
-        </button>
-      </td>
-    </tr>
-  </table>
+
+  <div class="question-wrapper">
+    <div class="task-code-block" style="margin-right: 10px;">
+      <h4>Code for testing</h4>
+      <textarea [(ngModel)]="quiz.code"></textarea>
+    </div>
+
+    <div class="correct-answer-block">
+        <h4>Correct test code</h4>
+        <textarea [(ngModel)]="quiz.correctTest"></textarea>
+    </div>
+  </div>
   <div class="btn-wrapper">
-    <button class="btn-create" (click)="newQuestionRedirect()">
-      Add question
-    </button>
     <button class="btn-create" (click)="confirm()">
       Confirm
     </button>

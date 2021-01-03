@@ -3,7 +3,7 @@ import { IQuestionData } from "src/app/interfaces/question-data";
 import { MatDialog } from "@angular/material/dialog";
 import { QuestionService } from "src/app/services/question-http.service";
 import { GlobalErrors, AuthErrors } from "src/app/classes/error";
-import { ErrorDialogComponent } from "../../../error-dialog/error-dialog.component";
+import { ErrorDialogComponent } from "../../../../core/components/error-dialog/error-dialog.component";
 import { ActivatedRoute } from "@angular/router";
 import { AnswerService } from "src/app/services/answer-http.service";
 import { IAnswerData } from "src/app/interfaces/answer-data";

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TestingComponent } from './testing.component';
-import { ErrorDialogComponent } from '../components/error-dialog/error-dialog.component';
 import { AuthService } from '../services/auth.service';
 import { UserService } from '../services/user-http.service';
 import { SignInUpValidator } from '../validators/sign-in-up.validator';
@@ -16,6 +15,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from '../app-routing.module';
+import { CoreModule } from '../core/core.module';
 
 
 
@@ -31,11 +31,11 @@ import { AppRoutingModule } from '../app-routing.module';
     HttpClientModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    CoreModule
   ],
   exports: [
     TestingComponent
   ],
-  entryComponents: [ErrorDialogComponent],
   providers: [
     AuthService,
     UserService,
